@@ -1,0 +1,35 @@
+// import 'package:flutter/material.dart';
+// import 'screens/home.dart';
+// import 'screens/onboard.dart';
+// import 'screens/shared_prefrence.dart';
+
+// class EduAtlas extends StatelessWidget {
+//   const EduAtlas({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'EduAtlas',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//       ),
+//       home: FutureBuilder<bool>(
+//         future: PreferencesHandler.isOnboardingComplete(),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return const Scaffold(
+//               body: Center(
+//                 child: CircularProgressIndicator(),
+//               ),
+//             );
+//           }
+//           final bool showOnboarding = !(snapshot.data ?? false);
+//           return showOnboarding 
+//               ? const OnboardingScreen() 
+//               : const UniversityListScreen();
+//         },
+//       ),
+//     );
+//   }
+// }
+
