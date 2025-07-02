@@ -27,7 +27,7 @@ class EduAtlas extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
-          home: const SplashScreen(), // Changed to use SplashScreen
+          home: const SplashScreen(),
         );
       },
     );
