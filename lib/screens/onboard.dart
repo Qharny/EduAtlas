@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'home.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -58,19 +57,19 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           _buildPage(
             title: "Welcome to EduAtlas",
             body: "Your global gateway to higher education opportunities",
-            svgAsset: "assets/svg/Education.svg",
+            pngAsset: "assets/images/education.png",
             gradientColors: [Colors.white, Colors.blue.shade50],
           ),
           _buildPage(
             title: "Explore Universities Worldwide",
             body: "Discover prestigious institutions across the globe with comprehensive search features",
-            svgAsset: "assets/svg/globe.svg",
+            pngAsset: "assets/images/globe.png",
             gradientColors: [Colors.white, Colors.indigo.shade50],
           ),
           _buildPage(
             title: "Make Informed Decisions",
             body: "Compare universities, programs, and find your perfect academic match",
-            svgAsset: "assets/svg/decision.svg",
+            pngAsset: "assets/images/decision.png",
             gradientColors: [Colors.white, Colors.cyan.shade50],
           ),
         ],
@@ -148,12 +147,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   PageViewModel _buildPage({
     required String title,
     required String body,
-    required String svgAsset,
+    required String pngAsset,
     required List<Color> gradientColors,
   }) {
     return PageViewModel(
       title: "",
-      body: "",
       useScrollView: false,
       bodyWidget: AnimatedBuilder(
         animation: _animationController,
@@ -163,7 +161,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             child: SlideTransition(
               position: _slideAnimation,
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                height: double.infinity,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -172,82 +171,110 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   ),
                 ),
                 child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Spacer(flex: 2),
-
-                        // SVG Illustration
-                        Container(
-                          height: 280,
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 20,
-                                offset: const Offset(0, 10),
-                              ),
-                            ],
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
                           ),
-                          child: SvgPicture.asset(
-                            svgAsset,
-                            fit: BoxFit.contain,
-                            placeholderBuilder: (context) => Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 50,
-                                  color: Colors.grey,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(height: constraints.maxHeight * 0.08),
+
+                                // Image Container
+                                Container(
+                                  height: constraints.maxHeight * 0.35,
+                                  width: double.infinity,
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 280,
+                                    minHeight: 200,
+                                  ),
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.9),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.asset(
+                                      pngAsset,
+                                      fit: BoxFit.contain,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius: BorderRadius.circular(15),
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.image,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
+
+                                SizedBox(height: constraints.maxHeight * 0.06),
+
+                                // Title
+                                Flexible(
+                                  child: Text(
+                                    title,
+                                    style: TextStyle(
+                                      fontSize: constraints.maxWidth > 400 ? 32 : 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      height: 1.2,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+
+                                SizedBox(height: constraints.maxHeight * 0.025),
+
+                                // Body text
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: Text(
+                                      body,
+                                      style: TextStyle(
+                                        fontSize: constraints.maxWidth > 400 ? 18 : 16,
+                                        color: Colors.grey.shade600,
+                                        height: 1.5,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 4,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(height: constraints.maxHeight * 0.12),
+                              ],
                             ),
                           ),
                         ),
-
-                        const SizedBox(height: 40),
-
-                        // Title
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                            height: 1.2,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Body text
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            body,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey.shade600,
-                              height: 1.5,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-
-                        const Spacer(flex: 3),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ),
