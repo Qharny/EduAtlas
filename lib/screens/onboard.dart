@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gif/gif.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -11,108 +11,250 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> with TickerProviderStateMixin {
-  late GifController _controller1;
-  late GifController _controller2;
-  late GifController _controller3;
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller1 = GifController(vsync: this);
-    _controller2 = GifController(vsync: this);
-    _controller3 = GifController(vsync: this);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutBack,
+    ));
+
+    _animationController.forward();
   }
 
   @override
   void dispose() {
-    _controller1.dispose();
-    _controller2.dispose();
-    _controller3.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return IntroductionScreen(
-      pages: [
-        PageViewModel(
-          title: "Welcome to EduAtlas",
-          body: "Your global gateway to higher education",
-          image: Center(
-            child: SizedBox(
-              height: 300,
-              child: Gif(
-                image: const AssetImage("assets/Gif/Education.gif"),
-                controller: _controller1,
-                autostart: Autostart.once,
-                placeholder: (context) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                onFetchCompleted: () {
-                  _controller1.reset();
-                  _controller1.forward();
-                },
-              ),
+    return Scaffold(
+      body: IntroductionScreen(
+        pages: [
+          _buildPage(
+            title: "Welcome to EduAtlas",
+            body: "Your global gateway to higher education opportunities",
+            svgAsset: "assets/svg/Education.svg",
+            gradientColors: [Colors.white, Colors.blue.shade50],
+          ),
+          _buildPage(
+            title: "Explore Universities Worldwide",
+            body: "Discover prestigious institutions across the globe with comprehensive search features",
+            svgAsset: "assets/svg/globe.svg",
+            gradientColors: [Colors.white, Colors.indigo.shade50],
+          ),
+          _buildPage(
+            title: "Make Informed Decisions",
+            body: "Compare universities, programs, and find your perfect academic match",
+            svgAsset: "assets/svg/decision.svg",
+            gradientColors: [Colors.white, Colors.cyan.shade50],
+          ),
+        ],
+        onDone: () => _completeOnboarding(context),
+        onSkip: () => _completeOnboarding(context),
+        showSkipButton: true,
+        skip: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: const Text(
+            "Skip",
+            style: TextStyle(
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          decoration: getPageDecoration(),
         ),
-        PageViewModel(
-          title: "Explore Universities Worldwide",
-          body: "Discover institutions across the globe with just a country name",
-          image: Center(
-            child: SizedBox(
-              height: 300,
-              child: Gif(
-                image: const AssetImage("assets/Gif/projectgif"),
-                controller: _controller2,
-                autostart: Autostart.once,
-                placeholder: (context) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                onFetchCompleted: () {
-                  _controller2.reset();
-                  _controller2.forward();
-                },
+        next: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
+            ],
+          ),
+          child: const Icon(
+            Icons.arrow_forward,
+            color: Colors.white,
+            size: 20,
+          ),
+        ),
+        done: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.blue.shade700],
+            ),
+            borderRadius: BorderRadius.circular(25),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Text(
+            "Get Started",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
           ),
-          decoration: getPageDecoration(),
         ),
-        PageViewModel(
-          title: "Make Informed Decisions",
-          body: "Compare universities and find your perfect academic fit",
-          image: Center(
-            child: SizedBox(
-              height: 300,
-              child: Gif(
-                image: const AssetImage("assets/Gif/admission.gif"),
-                controller: _controller3,
-                autostart: Autostart.loop,
-                placeholder: (context) => const Center(
-                  child: CircularProgressIndicator(),
+        dotsDecorator: getDotDecoration(),
+        globalBackgroundColor: Colors.white,
+        skipOrBackFlex: 0,
+        nextFlex: 0,
+        curve: Curves.easeInOut,
+        controlsMargin: const EdgeInsets.all(16),
+        controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
+      ),
+    );
+  }
+
+  PageViewModel _buildPage({
+    required String title,
+    required String body,
+    required String svgAsset,
+    required List<Color> gradientColors,
+  }) {
+    return PageViewModel(
+      title: "",
+      body: "",
+      useScrollView: false,
+      bodyWidget: AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: gradientColors,
+                  ),
                 ),
-                onFetchCompleted: () {
-                  _controller3.reset();
-                  _controller3.forward();
-                },
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Spacer(flex: 2),
+
+                        // SVG Illustration
+                        Container(
+                          height: 280,
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: SvgPicture.asset(
+                            svgAsset,
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (context) => Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // Title
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            height: 1.2,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Body text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            body,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey.shade600,
+                              height: 1.5,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+
+                        const Spacer(flex: 3),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          decoration: getPageDecoration(),
-        ),
-      ],
-      onDone: () => _completeOnboarding(context),
-      onSkip: () => _completeOnboarding(context),
-      showSkipButton: true,
-      skip: const Text("Skip"),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-      dotsDecorator: getDotDecoration(),
-      globalBackgroundColor: Colors.white,
-      skipOrBackFlex: 0,
-      nextFlex: 0,
+          );
+        },
+      ),
     );
   }
 
@@ -122,35 +264,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
     if (context.mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const UniversityListScreen()),
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+          const UniversityListScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: const Duration(milliseconds: 500),
+        ),
       );
     }
   }
 
-  PageDecoration getPageDecoration() {
-    return PageDecoration(
-      titleTextStyle: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      bodyTextStyle: const TextStyle(fontSize: 18),
-      bodyPadding: const EdgeInsets.all(16),
-      imagePadding: const EdgeInsets.all(24),
-      boxDecoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.white, Colors.blue.shade50],
-        ),
-      ),
-    );
-  }
-
   DotsDecorator getDotDecoration() {
     return DotsDecorator(
-      color: const Color(0xFFBDBDBD),
+      color: Colors.grey.shade300,
       activeColor: Colors.blue,
-      size: const Size(10, 10),
-      activeSize: const Size(22, 10),
+      size: const Size(12, 12),
+      activeSize: const Size(30, 12),
+      spacing: const EdgeInsets.symmetric(horizontal: 4),
       activeShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
       ),
     );
   }
