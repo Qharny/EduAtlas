@@ -339,8 +339,8 @@ class _UniversityListScreenState extends State<UniversityListScreen>
           children: [
             Hero(
               tag: 'university_hero',
-              child: Image.network(
-                'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+              child: Image.asset(
+                'assets/images/uni.jpeg',
                 fit: BoxFit.cover,
               ),
             ),

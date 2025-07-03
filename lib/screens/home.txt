@@ -1,0 +1,513 @@
+import 'package:eduatlas/Theme/theme.dart';
+import 'package:eduatlas/screens/settings.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/model.dart';
+import '../services/api.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class UniversityListScreen extends StatefulWidget {
+  const UniversityListScreen({super.key});
+
+  @override
+  State<UniversityListScreen> createState() => _UniversityListScreenState();
+}
+
+class _UniversityListScreenState extends State<UniversityListScreen> {
+  final TextEditingController _countryController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  List<University> _universities = [];
+  List<String> _countryList = [];
+  bool _isLoading = false;
+  bool _showBackToTop = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCountries();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >= 400) {
+      if (!_showBackToTop) {
+        setState(() {
+          _showBackToTop = true;
+        });
+      }
+    } else {
+      if (_showBackToTop) {
+        setState(() {
+          _showBackToTop = false;
+        });
+      }
+    }
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  Future<void> _fetchCountries() async {
+    try {
+      final response = await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _countryList = data.map((country) => country['name']['common'] as String).toList();
+          _countryList.sort();
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to fetch countries')),
+      );
+    }
+  }
+
+  void _fetchUniversities(String country) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final universities = await UniversityService.fetchUniversities(country);
+      setState(() {
+        _universities = universities;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to fetch universities')),
+      );
+    }
+  }
+
+  void _openSettings() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const SettingsScreen()));
+  }
+
+  void _openUniversityLink(String urlString) async {
+    try {
+      // Clean and format the URL
+      String cleanUrl = urlString.trim();
+
+      // Add https:// if no protocol is specified
+      if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        cleanUrl = 'https://$cleanUrl';
+      }
+
+      final Uri url = Uri.parse(cleanUrl);
+
+      // Try to launch directly without canLaunchUrl check (fixes Android 11+ issues)
+      try {
+        final bool launched = await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        );
+        if (!launched) {
+          throw 'Launch returned false';
+        }
+      } catch (e) {
+        // Fallback: try with different launch modes
+        try {
+          await launchUrl(
+            url,
+            mode: LaunchMode.inAppBrowserView,
+          );
+        } catch (e2) {
+          // Final fallback: try with platform default
+          await launchUrl(url);
+        }
+      }
+    } catch (e) {
+      // Show user-friendly error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Unable to open link. Please check your internet connection or try copying the link manually.'),
+            action: SnackBarAction(
+              label: 'Copy URL',
+              onPressed: () {
+                // You can add clipboard functionality here if needed
+                // Clipboard.setData(ClipboardData(text: urlString));
+              },
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _showUniversityDetails(University university) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return UniversityDetailDialog(
+          university: university,
+          onOpenLink: _openUniversityLink,
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Scaffold(
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: _openSettings,
+              ),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text(
+                'EduAtlas',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.3),
+                          Colors.black.withOpacity(0.5),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Explore Universities Worldwide',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Enter a country name to discover its universities',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  Autocomplete<String>(
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      }
+                      return _countryList.where((String option) {
+                        return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                      });
+                    },
+                    onSelected: (String selection) {
+                      _countryController.text = selection;
+                      _fetchUniversities(selection);
+                    },
+                    fieldViewBuilder: (BuildContext context,
+                        TextEditingController controller,
+                        FocusNode focusNode,
+                        VoidCallback onFieldSubmitted) {
+                      return TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        decoration: InputDecoration(
+                          hintText: 'Enter country name',
+                          filled: true,
+                          fillColor: themeProvider.isDarkMode
+                              ? Colors.grey[800]
+                              : Colors.grey[200],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () => _fetchUniversities(controller.text),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (_universities.isEmpty)
+                    Center(
+                      child: Text(
+                        'No universities to display. Try searching for a country!',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          if (!_isLoading && _universities.isNotEmpty)
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final university = _universities[index];
+                  return AnimatedContainer(
+                    duration: Duration(milliseconds: 300 + (index * 50)),
+                    curve: Curves.easeInOut,
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      elevation: 4,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(8),
+                        onTap: () => _showUniversityDetails(university),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      university.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      university.country,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    if (university.webPages.isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        university.webPages.first,
+                                        style: const TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 12,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                Icons.school,
+                                color: Colors.blue,
+                                size: 32,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                childCount: _universities.length,
+              ),
+            ),
+        ],
+      ),
+      floatingActionButton: AnimatedScale(
+        scale: _showBackToTop ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 200),
+        child: FloatingActionButton(
+          onPressed: _scrollToTop,
+          backgroundColor: Theme.of(context).primaryColor,
+          child: const Icon(Icons.keyboard_arrow_up),
+        ),
+      ),
+    );
+  }
+}
+
+class UniversityDetailDialog extends StatelessWidget {
+  final University university;
+  final Function(String) onOpenLink;
+
+  const UniversityDetailDialog({
+    super.key,
+    required this.university,
+    required this.onOpenLink,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surface.withOpacity(0.8),
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.school,
+                  color: Theme.of(context).primaryColor,
+                  size: 32,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    university.name,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    size: 16,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    university.country,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (university.webPages.isNotEmpty) ...[
+              const SizedBox(height: 20),
+              Text(
+                'Website${university.webPages.length > 1 ? 's' : ''}:',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...university.webPages.map((url) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: InkWell(
+                  onTap: () => onOpenLink(url),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.blue.withOpacity(0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.link,
+                          color: Colors.blue,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            url,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.open_in_new,
+                          color: Colors.blue,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )).toList(),
+            ],
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
