@@ -26,12 +26,12 @@ class SplashContent extends StatelessWidget {
             // App Name
             SlideTransition(
               position: slideAnimation,
-              child: const Text(
+              child: Text(
                 'EduAtlas',
                 style: TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.headlineLarge?.color,
                   letterSpacing: 2,
                 ),
               ),
@@ -44,7 +44,7 @@ class SplashContent extends StatelessWidget {
                 'Your Global Gateway to Higher Education',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                   fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,

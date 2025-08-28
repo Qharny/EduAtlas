@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:eduatlas/Theme/theme.dart';
 import 'package:eduatlas/screens/settings_refactored.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../models/model.dart';
 import '../services/api.dart';
@@ -177,10 +175,8 @@ class _UniversityListScreenState extends State<UniversityListScreen>
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDark = themeProvider.isDarkMode;
-
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
@@ -194,7 +190,6 @@ class _UniversityListScreenState extends State<UniversityListScreen>
             onCountrySelected: _fetchUniversities,
             controller: _countryController,
             focusNode: _searchFocusNode,
-            isDark: isDark,
             isLoading: _isLoading,
             universities: _universities,
             selectedCountry: _selectedCountry,
@@ -210,8 +205,12 @@ class _UniversityListScreenState extends State<UniversityListScreen>
         scale: _fabAnimation,
         child: FloatingActionButton.extended(
           onPressed: _scrollToTop,
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.black
+              : Colors.white,
+          foregroundColor: Theme.of(context).brightness == Brightness.light
+              ? Colors.white
+              : Colors.black,
           icon: const Icon(Icons.keyboard_arrow_up),
           label: const Text('Top'),
           elevation: 8,

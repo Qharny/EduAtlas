@@ -95,6 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         // decoration: BoxDecoration(
         //   gradient: LinearGradient(
@@ -138,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Text(
                         'Version 1.0.0',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.bodySmall?.color,
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
                         ),

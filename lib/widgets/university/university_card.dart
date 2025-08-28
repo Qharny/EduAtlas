@@ -69,16 +69,9 @@ class _UniversityCardState extends State<UniversityCard>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).cardColor,
-                    Theme.of(context).cardColor.withOpacity(0.95),
-                  ],
-                ),
+                color: Colors.white,
                 border: Border.all(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Colors.black.withOpacity(0.1),
                   width: 1,
                 ),
               ),
@@ -90,20 +83,11 @@ class _UniversityCardState extends State<UniversityCard>
                       width: 60,
                       height: 60,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor.withOpacity(0.7),
-                          ],
-                        ),
+                        color: Colors.black,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Theme.of(
-                              context,
-                            ).primaryColor.withOpacity(0.3),
+                            color: Colors.black.withOpacity(0.3),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -127,6 +111,7 @@ class _UniversityCardState extends State<UniversityCard>
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             height: 1.3,
+                            color: Colors.black,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -138,7 +123,7 @@ class _UniversityCardState extends State<UniversityCard>
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.black.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -147,13 +132,13 @@ class _UniversityCardState extends State<UniversityCard>
                               Icon(
                                 Icons.location_on,
                                 size: 14,
-                                color: Colors.grey[600],
+                                color: Colors.black.withOpacity(0.6),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 widget.university.country,
                                 style: TextStyle(
-                                  color: Colors.grey[600],
+                                  color: Colors.black.withOpacity(0.6),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -168,14 +153,14 @@ class _UniversityCardState extends State<UniversityCard>
                               Icon(
                                 Icons.language,
                                 size: 14,
-                                color: Colors.blue.shade600,
+                                color: Colors.black.withOpacity(0.6),
                               ),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   widget.university.webPages.first,
                                   style: TextStyle(
-                                    color: Colors.blue.shade600,
+                                    color: Colors.black.withOpacity(0.6),
                                     fontSize: 12,
                                   ),
                                   overflow: TextOverflow.ellipsis,
@@ -188,9 +173,9 @@ class _UniversityCardState extends State<UniversityCard>
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Icon(
+                  const Icon(
                     Icons.arrow_forward_ios,
-                    color: Theme.of(context).primaryColor,
+                    color: Colors.black,
                     size: 16,
                   ),
                 ],

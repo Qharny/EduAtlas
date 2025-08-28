@@ -17,7 +17,7 @@ class AnimatedAppBar extends StatelessWidget {
       floating: false,
       pinned: true,
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 8),
@@ -25,10 +25,15 @@ class AnimatedAppBar extends StatelessWidget {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.1)
+                    : Colors.white.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.settings, color: Colors.white),
+              child: Icon(
+                Icons.settings,
+                color: Theme.of(context).iconTheme.color,
+              ),
             ),
             onPressed: onSettingsPressed,
           ),
@@ -37,19 +42,12 @@ class AnimatedAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         title: FadeTransition(
           opacity: headerAnimation,
-          child: const Text(
+          child: Text(
             'EduAtlas',
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).textTheme.headlineSmall?.color,
               fontWeight: FontWeight.bold,
               fontSize: 24,
-              shadows: [
-                Shadow(
-                  offset: Offset(0, 2),
-                  blurRadius: 4,
-                  color: Colors.black38,
-                ),
-              ],
             ),
           ),
         ),
@@ -58,10 +56,7 @@ class AnimatedAppBar extends StatelessWidget {
           children: [
             Hero(
               tag: 'university_hero',
-              child: Image.asset(
-                'assets/images/uni.jpeg',
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('assets/images/uni.jpeg', fit: BoxFit.cover),
             ),
             Container(
               decoration: BoxDecoration(
@@ -69,8 +64,8 @@ class AnimatedAppBar extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.2),
-                    Colors.black.withOpacity(0.8),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.1),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
                   ],
                 ),
               ),
@@ -88,28 +83,43 @@ class AnimatedAppBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.8)
+                            : Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
+                      child: Text(
                         '🌍 Discover Universities',
                         style: TextStyle(
-                          color: Colors.white,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Explore higher education institutions from around the world',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 12,
+                    //     vertical: 6,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.black.withOpacity(0.6),
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: const Text(
+                    //     'Explore higher education institutions from around the world',
+                    //     style: TextStyle(color: Colors.white, fontSize: 14),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -119,4 +129,4 @@ class AnimatedAppBar extends StatelessWidget {
       ),
     );
   }
-} 
+}

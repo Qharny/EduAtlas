@@ -97,6 +97,7 @@ class _OnboardingPageState extends State<OnboardingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -115,22 +116,27 @@ class _OnboardingPageState extends State<OnboardingPage>
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.1),
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.black.withOpacity(0.1)
+                              : Colors.white.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.arrow_back,
                               size: 16,
-                              color: Colors.black,
+                              color: Theme.of(context).iconTheme.color,
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               'Back',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Theme.of(
+                                  context,
+                                ).textTheme.bodyLarge?.color,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -148,13 +154,15 @@ class _OnboardingPageState extends State<OnboardingPage>
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.white.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Skip',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -199,8 +207,14 @@ class _OnboardingPageState extends State<OnboardingPage>
                         height: 10,
                         decoration: BoxDecoration(
                           color: _currentPage == index
-                              ? Colors.black
-                              : Colors.black.withOpacity(0.3),
+                              ? (Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black
+                                    : Colors.white)
+                              : (Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.black.withOpacity(0.3)
+                                    : Colors.white.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
@@ -216,11 +230,16 @@ class _OnboardingPageState extends State<OnboardingPage>
                       width: double.infinity,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(28),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                ? Colors.black.withOpacity(0.2)
+                                : Colors.white.withOpacity(0.2),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -234,8 +253,12 @@ class _OnboardingPageState extends State<OnboardingPage>
                               _currentPage == _totalPages - 1
                                   ? 'Get Started'
                                   : 'Next',
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.white
+                                    : Colors.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -245,7 +268,11 @@ class _OnboardingPageState extends State<OnboardingPage>
                               _currentPage == _totalPages - 1
                                   ? Icons.rocket_launch
                                   : Icons.arrow_forward,
-                              color: Colors.white,
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
                               size: 20,
                             ),
                           ],
@@ -287,10 +314,10 @@ class _OnboardingPageState extends State<OnboardingPage>
               // Title
               Text(
                 data.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.headlineLarge?.color,
                   letterSpacing: 1,
                 ),
                 textAlign: TextAlign.center,
@@ -304,7 +331,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black.withOpacity(0.7),
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -316,7 +343,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                 data.description,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black.withOpacity(0.6),
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,

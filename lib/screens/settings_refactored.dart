@@ -1,7 +1,7 @@
-import 'package:eduatlas/Theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Theme/theme.dart';
 import '../widgets/settings/settings_list_item.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -16,43 +16,163 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), elevation: 0),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          'Settings',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+        ),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
+      ),
       body: ListView(
+        padding: const EdgeInsets.all(20),
         children: [
-          Consumer<ThemeProvider>(
-            builder: (context, themeProvider, child) {
-              return SwitchListTile(
-                title: const Text('Dark Mode'),
-                subtitle: const Text('Toggle between light and dark themes'),
-                value: themeProvider.isDarkMode,
-                onChanged: (bool value) {
-                  themeProvider.toggleTheme(value);
-                },
-                secondary: Icon(
-                  themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                  color: Theme.of(context).primaryColor,
+          // Header
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(0.05)
+                  : Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.1)
+                        : Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).iconTheme.color,
+                    size: 24,
+                  ),
                 ),
-              );
-            },
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'App Settings',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Customize your EduAtlas experience',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Divider(),
-          SettingsListItem(
-            icon: Icons.language,
-            title: 'Language',
-            subtitle: _selectedLanguage,
-            onTap: _showLanguageDialog,
+
+          const SizedBox(height: 24),
+
+          // Dark Mode Toggle
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.1)
+                    : Colors.white.withOpacity(0.1),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.05)
+                      : Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: SwitchListTile(
+              title: Text(
+                'Dark Mode',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              subtitle: Text(
+                'Toggle between light and dark themes',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              value: themeProvider.isDarkMode,
+              onChanged: (bool value) {
+                themeProvider.toggleTheme(value);
+              },
+              secondary: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.1)
+                      : Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                  color: Theme.of(context).iconTheme.color,
+                  size: 20,
+                ),
+              ),
+            ),
           ),
-          SettingsListItem(
-            icon: Icons.info_outline,
-            title: 'About',
-            onTap: _showAboutDialog,
-          ),
-          SettingsListItem(
-            icon: Icons.privacy_tip_outlined,
-            title: 'Privacy Policy',
-            onTap: _showPrivacyPolicy,
-            showDivider: false,
+
+          const SizedBox(height: 16),
+
+          // Settings Items
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.1)
+                    : Colors.white.withOpacity(0.1),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.05)
+                      : Colors.black.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                SettingsListItem(
+                  icon: Icons.language,
+                  title: 'Language',
+                  subtitle: _selectedLanguage,
+                  onTap: _showLanguageDialog,
+                ),
+                SettingsListItem(
+                  icon: Icons.info_outline,
+                  title: 'About',
+                  onTap: _showAboutDialog,
+                ),
+                SettingsListItem(
+                  icon: Icons.privacy_tip_outlined,
+                  title: 'Privacy Policy',
+                  onTap: _showPrivacyPolicy,
+                  showDivider: false,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -63,15 +183,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Language'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildLanguageOption('English', 'English'),
-              _buildLanguageOption('Spanish', 'Español'),
-              _buildLanguageOption('French', 'Français'),
-            ],
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            decoration: BoxDecoration(
+              color: Theme.of(context).dialogTheme.backgroundColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.5),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.language,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Select Language',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Content
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      _buildLanguageOption('English', 'English'),
+                      _buildLanguageOption('Spanish', 'Español'),
+                      _buildLanguageOption('French', 'Français'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -79,17 +270,88 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildLanguageOption(String language, String displayName) {
-    return ListTile(
-      title: Text(displayName),
-      trailing: _selectedLanguage == language
-          ? Icon(Icons.check, color: Theme.of(context).primaryColor)
-          : null,
-      onTap: () {
-        setState(() {
-          _selectedLanguage = language;
-        });
-        Navigator.pop(context);
-      },
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              _selectedLanguage = language;
+            });
+            Navigator.pop(context);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: _selectedLanguage == language
+                    ? (Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white)
+                    : (Theme.of(context).brightness == Brightness.light
+                          ? Colors.black.withOpacity(0.1)
+                          : Colors.white.withOpacity(0.1)),
+              ),
+              borderRadius: BorderRadius.circular(12),
+              color: _selectedLanguage == language
+                  ? (Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.05)
+                        : Colors.white.withOpacity(0.05))
+                  : Colors.transparent,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.1)
+                        : Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.flag,
+                    color: Theme.of(context).iconTheme.color,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    displayName,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      fontWeight: _selectedLanguage == language
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                if (_selectedLanguage == language)
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.white
+                          : Colors.black,
+                      size: 16,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -97,27 +359,148 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('About EduAtlas'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Version: 1.0.0'),
-              SizedBox(height: 8),
-              Text('EduAtlas is your global gateway to higher education.'),
-              SizedBox(height: 8),
-              Text(
-                'Discover universities from around the world and make informed decisions about your academic future.',
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            decoration: BoxDecoration(
+              color: Theme.of(context).dialogTheme.backgroundColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.5),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
             ),
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.info_outline,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'About EduAtlas',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Content
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.black.withOpacity(0.1)
+                              : Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Version 1.0.0',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'EduAtlas is your global gateway to higher education.',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Discover universities from around the world and make informed decisions about your academic future.',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(height: 1.5),
+                      ),
+                    ],
+                  ),
+                ),
+                // Footer
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.02)
+                        : Colors.white.withOpacity(0.02),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -127,37 +510,166 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Privacy Policy'),
-          content: const SingleChildScrollView(
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
+            decoration: BoxDecoration(
+              color: Theme.of(context).dialogTheme.backgroundColor,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.5),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Privacy Policy for EduAtlas'),
-                SizedBox(height: 16),
-                Text(
-                  'This app collects minimal data necessary for functionality:',
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.privacy_tip_outlined,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 8),
-                Text('• Search queries for university information'),
-                Text('• App preferences (theme, language)'),
-                Text('• Onboarding completion status'),
-                SizedBox(height: 16),
-                Text(
-                  'No personal information is collected or shared with third parties.',
+                // Content
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Privacy Policy for EduAtlas',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'This app collects minimal data necessary for functionality:',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildPrivacyItem(
+                          'Search queries for university information',
+                        ),
+                        _buildPrivacyItem('App preferences (theme, language)'),
+                        _buildPrivacyItem('Onboarding completion status'),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No personal information is collected or shared with third parties.',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Footer
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black.withOpacity(0.02)
+                        : Colors.white.withOpacity(0.02),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Close',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ],
         );
       },
+    );
+  }
+
+  Widget _buildPrivacyItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 6, right: 8),
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(3),
+            ),
+          ),
+          Expanded(
+            child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ],
+      ),
     );
   }
 }

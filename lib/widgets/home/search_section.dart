@@ -9,7 +9,6 @@ class SearchSection extends StatelessWidget {
   final Function(String) onCountrySelected;
   final TextEditingController controller;
   final FocusNode focusNode;
-  final bool isDark;
   final bool isLoading;
   final List<dynamic> universities;
   final String selectedCountry;
@@ -21,7 +20,6 @@ class SearchSection extends StatelessWidget {
     required this.onCountrySelected,
     required this.controller,
     required this.focusNode,
-    required this.isDark,
     required this.isLoading,
     required this.universities,
     required this.selectedCountry,
@@ -47,17 +45,19 @@ class SearchSection extends StatelessWidget {
               opacity: headerAnimation,
               child: Text(
                 'Search Universities',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).textTheme.headlineSmall?.color,
+                  fontSize: 28,
                 ),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Enter a country name to discover its universities',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+                fontSize: 16,
               ),
             ),
             const SizedBox(height: 20),
@@ -66,7 +66,6 @@ class SearchSection extends StatelessWidget {
               onCountrySelected: onCountrySelected,
               controller: controller,
               focusNode: focusNode,
-              isDark: isDark,
             ),
             const SizedBox(height: 16),
             if (selectedCountry.isNotEmpty) _buildSelectedCountryInfo(context),
@@ -98,17 +97,21 @@ class SearchSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.black.withOpacity(0.05)
+            : Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).primaryColor.withOpacity(0.3),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black.withOpacity(0.1)
+              : Colors.white.withOpacity(0.1),
         ),
       ),
       child: Row(
         children: [
           Icon(
             Icons.location_on,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).iconTheme.color,
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -116,7 +119,7 @@ class SearchSection extends StatelessWidget {
             child: Text(
               'Showing universities in $selectedCountry',
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -124,7 +127,7 @@ class SearchSection extends StatelessWidget {
           Text(
             '${universities.length} found',
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -132,4 +135,4 @@ class SearchSection extends StatelessWidget {
       ),
     );
   }
-} 
+}
