@@ -1,5 +1,5 @@
 import 'package:eduatlas/Theme/theme.dart';
-import 'package:eduatlas/screens/splash_screen.dart';
+import 'package:eduatlas/screens/splash_screen_refactored.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
