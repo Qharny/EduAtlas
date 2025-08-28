@@ -21,47 +21,31 @@ class SplashContent extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // App Icon/Logo
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.school, size: 60, color: Colors.blue),
-            ),
-            const SizedBox(height: 30),
+            Image.asset('assets/Gif/splash.gif', fit: BoxFit.cover),
+            const SizedBox(height: 40),
             // App Name
             SlideTransition(
               position: slideAnimation,
               child: const Text(
                 'EduAtlas',
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 42,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Colors.black,
                   letterSpacing: 2,
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             // Tagline
             SlideTransition(
               position: slideAnimation,
               child: Text(
                 'Your Global Gateway to Higher Education',
                 style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity(0.9),
-                  fontWeight: FontWeight.w300,
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
                 ),
                 textAlign: TextAlign.center,
               ),

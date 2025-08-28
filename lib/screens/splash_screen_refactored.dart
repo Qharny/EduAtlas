@@ -96,18 +96,18 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.blue.shade400,
-              Colors.blue.shade600,
-              Colors.blue.shade800,
-            ],
-            stops: const [0.0, 0.5, 1.0],
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //     colors: [
+        //       Colors.blue.shade400,
+        //       Colors.blue.shade600,
+        //       Colors.blue.shade800,
+        //     ],
+        //     stops: const [0.0, 0.5, 1.0],
+        //   ),
+        // ),
         child: SafeArea(
           child: Column(
             children: [
@@ -126,46 +126,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
               ),
-              // Loading indicator
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AnimatedBuilder(
-                      animation: _fadeAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _fadeAnimation.value,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white.withOpacity(0.8),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Text(
-                                'Loading...',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+
               // Version or copyright info
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
@@ -177,7 +138,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Text(
                         'Version 1.0.0',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.black,
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
                         ),
