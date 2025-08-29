@@ -44,6 +44,10 @@ Each university in the list displays:
 - Country
 - Website (if available)
 
+### 5. In-App Web View
+
+When you tap on a university's website link, it opens within the app using an integrated web view, providing a seamless browsing experience without leaving the app.
+
 
 ![University Details](https://github.com/Qharny/EduAtlas/blob/main/Assets/images/example.jpg?raw=true)
 
@@ -55,6 +59,7 @@ EduAtlas uses the following key components:
 2. **University Model**: Structures the data received from the API.
 3. **Onboarding Screen**: Uses the `introduction_screen` package for a smooth onboarding experience.
 4. **Home Screen**: Implements a custom UI with a search bar and results list.
+5. **Web View**: Uses `webview_flutter` package for in-app web browsing.
 
 ## Getting Started
 
