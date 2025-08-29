@@ -18,14 +18,15 @@ class LoadingWidget extends StatelessWidget {
             height: size,
             child: CircularProgressIndicator(
               strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                color ?? Theme.of(context).primaryColor,
-              ),
+              valueColor: AlwaysStoppedAnimation<Color>(color ?? Colors.black),
             ),
           ),
           if (message != null) ...[
             const SizedBox(height: 16),
-            Text(message!, style: TextStyle(color: Colors.grey[600])),
+            Text(
+              message!,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
           ],
         ],
       ),

@@ -5,17 +5,89 @@ class AppTheme {
     primarySwatch: Colors.blue,
     brightness: Brightness.light,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.blue.shade800,
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.black),
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: 24,
+      ),
     ),
     cardTheme: CardThemeData(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: Colors.white,
+      shadowColor: Colors.black.withOpacity(0.1),
     ),
-    scaffoldBackgroundColor: Colors.white,
-    textTheme: const TextTheme(
-      headlineSmall: TextStyle(color: Colors.black87),
-      titleMedium: TextStyle(color: Colors.black54),
+    textTheme: TextTheme(
+      headlineLarge: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineMedium: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineSmall: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      titleLarge: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+      ),
+      titleMedium: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+      ),
+      titleSmall: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyLarge: const TextStyle(color: Colors.black),
+      bodyMedium: const TextStyle(color: Colors.black),
+      bodySmall: TextStyle(color: Colors.black.withOpacity(0.7)),
+    ),
+    iconTheme: const IconThemeData(color: Colors.black),
+    dividerTheme: DividerThemeData(
+      color: Colors.black.withOpacity(0.1),
+      thickness: 1,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 8,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return Colors.white;
+        }
+        return Colors.white;
+      }),
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return Colors.black;
+        }
+        return Colors.black.withOpacity(0.3);
+      }),
     ),
   );
 
@@ -23,17 +95,89 @@ class AppTheme {
     primarySwatch: Colors.blue,
     brightness: Brightness.dark,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.grey.shade900,
+    scaffoldBackgroundColor: const Color(0xFF121212),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF121212),
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
+      titleTextStyle: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 24,
+      ),
     ),
     cardTheme: CardThemeData(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: const Color(0xFF1E1E1E),
+      shadowColor: Colors.black.withOpacity(0.3),
     ),
-    scaffoldBackgroundColor: Colors.grey.shade900,
-    textTheme: const TextTheme(
-      headlineSmall: TextStyle(color: Colors.white70),
-      titleMedium: TextStyle(color: Colors.white60),
+    textTheme: TextTheme(
+      headlineLarge: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineMedium: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineSmall: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+      titleLarge: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+      titleMedium: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+      titleSmall: const TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyLarge: const TextStyle(color: Colors.white),
+      bodyMedium: const TextStyle(color: Colors.white),
+      bodySmall: TextStyle(color: Colors.white.withOpacity(0.7)),
+    ),
+    iconTheme: const IconThemeData(color: Colors.white),
+    dividerTheme: DividerThemeData(
+      color: Colors.white.withOpacity(0.1),
+      thickness: 1,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: const Color(0xFF1E1E1E),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 8,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return Colors.black;
+        }
+        return Colors.white;
+      }),
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return Colors.white;
+        }
+        return Colors.white.withOpacity(0.3);
+      }),
     ),
   );
 }
