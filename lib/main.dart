@@ -1,4 +1,6 @@
 import 'package:eduatlas/Theme/theme.dart';
+import 'package:eduatlas/l10n/app_localizations.dart';
+import 'package:eduatlas/provider/language_provider.dart';
 import 'package:eduatlas/screens/splash_screen_refactored.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
