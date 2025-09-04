@@ -42,7 +42,7 @@ class CountrySearchField extends StatelessWidget {
         },
         onSelected: (String selection) {
           controller.text = selection;
-          onCountrySelected(selection);
+          onCountrySelected(selection.trim());
           focusNode.unfocus();
         },
         fieldViewBuilder:
@@ -82,7 +82,8 @@ class CountrySearchField extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(12),
-                        onTap: () => onCountrySelected(fieldController.text),
+                        onTap: () =>
+                            onCountrySelected(fieldController.text.trim()),
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           child: const Icon(
@@ -107,7 +108,7 @@ class CountrySearchField extends StatelessWidget {
                     vertical: 16,
                   ),
                 ),
-                onSubmitted: (value) => onCountrySelected(value),
+                onSubmitted: (value) => onCountrySelected(value.trim()),
               );
             },
         optionsViewBuilder: (context, onSelected, options) {
