@@ -41,11 +41,9 @@ dependencies:
   introduction_screen: ^3.1.14
   shared_preferences: ^2.2.3
   url_launcher: ^6.3.0
+  webview_flutter: ^4.7.0
   gif: ^2.3.0
   flutter_launcher_icons: ^0.14.4
-  flutter_localizations:
-    sdk: flutter
-  intl: 0.20.2
 
 
 dev_dependencies:
