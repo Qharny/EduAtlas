@@ -641,7 +641,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               Navigator.pop(context);
                               // You can replace this URL with your actual privacy policy URL
                               const privacyPolicyUrl =
-                                  'https://your-website.com/privacy_policy.html';
+                                  'https://qharny.github.io/EduAtlas_Policy.html';
                               try {
                                 final Uri url = Uri.parse(privacyPolicyUrl);
                                 await launchUrl(

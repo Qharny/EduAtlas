@@ -20,7 +20,7 @@ You need to host the `privacy_policy.html` file on a website. You can:
 
 **Option A: Use a free hosting service**
 - Upload `privacy_policy.html` to GitHub Pages, Netlify, or Vercel
-- Get a public URL like `https://yourusername.github.io/privacy_policy.html`
+- Get a public URL like `https://qharny.github.io/EduAtlas_Policy.html`
 
 **Option B: Use your own website**
 - Upload the file to your existing website
@@ -29,15 +29,15 @@ You need to host the `privacy_policy.html` file on a website. You can:
 ### 2. Update the Privacy Policy URL in Your App
 In `lib/screens/settings_refactored.dart`, find this line (around line 641):
 ```dart
-const privacyPolicyUrl = 'https://your-website.com/privacy_policy.html';
+const privacyPolicyUrl = 'https://qharny.github.io/EduAtlas_Policy.html';
 ```
 
-Replace `'https://your-website.com/privacy_policy.html'` with your actual privacy policy URL.
+Replace `'https://qharny.github.io/EduAtlas_Policy.html'` with your actual privacy policy URL.
 
 ### 3. Update Contact Information
 In both `PRIVACY_POLICY.md` and `privacy_policy.html`, replace these placeholders:
-- `[Your Contact Email]` - Replace with your actual email
-- `[Your Business Address]` - Replace with your business address (or remove if not applicable)
+- `kabuteymanasseh5@gmail.com` - Replace with your actual email
+- `Remote` - Replace with your business address (or remove if not applicable)
 
 ### 4. Google Play Store Listing
 When submitting to Google Play Store:
