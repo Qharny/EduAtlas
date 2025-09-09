@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Theme/theme.dart';
 import '../widgets/settings/settings_list_item.dart';
@@ -596,15 +597,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         const SizedBox(height: 12),
                         _buildPrivacyItem(
-                          'Search queries for university information',
+                          'Language preferences (stored locally)',
                         ),
-                        _buildPrivacyItem('App preferences (theme, language)'),
+                        _buildPrivacyItem('Theme preferences (stored locally)'),
                         _buildPrivacyItem('Onboarding completion status'),
+                        _buildPrivacyItem(
+                          'University search queries (not stored)',
+                        ),
                         const SizedBox(height: 16),
-                        Text(
-                          'No personal information is collected or shared with third parties.',
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w500),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                ? Colors.blue.withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.blue.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Important:',
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'No personal information is collected, stored, or shared with third parties.',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              // You can replace this URL with your actual privacy policy URL
+                              const privacyPolicyUrl =
+                                  'https://your-website.com/privacy_policy.html';
+                              try {
+                                final Uri url = Uri.parse(privacyPolicyUrl);
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'Unable to open privacy policy',
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            icon: const Icon(Icons.open_in_new),
+                            label: const Text('View Full Privacy Policy'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).brightness ==
+                                      Brightness.light
+                                  ? Colors.blue
+                                  : Colors.blue.shade300,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                          ),
                         ),
                       ],
                     ),

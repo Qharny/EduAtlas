@@ -1,4 +1,4 @@
-package com.example.eduatlas
+package com.eduatlas.global.university.explorer
 
 import io.flutter.embedding.android.FlutterActivity
 
